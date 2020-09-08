@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const { urlencoded } = require("body-parser");
 const mongoose = require("mongoose");
+const _ = require("lodash");
 
 const app = new express();
 
@@ -87,8 +88,8 @@ app.get("/", function (req, res) {
 app.post("/", function(req, res){
 
     const newTodo = req.body.newTodo;
-
     const listName = req.body.list;
+    
 
     const newItem = new Item ({
         name: newTodo
@@ -110,21 +111,42 @@ app.post("/", function(req, res){
 });
 
 app.post("/delete", function(req, res){
-    console.log(req.body.checkbox);
 
-    Item.findByIdAndRemove( { _id: req.body.checkbox }, function(err){
-        if (err){
-            console.log(err);
-        } else {
-            console.log("Successfully deleted checked item");
-            res.redirect("/");
-        }
-    });
+    const checkedItemId = req.body.checkbox;
+    const listNameHidden = req.body.hiddenList;
+
+    if (listNameHidden === "Today"){
+        Item.findByIdAndRemove( { _id: checkedItemId }, function(err){
+            if (err){
+                console.log(err);
+            } else {
+                console.log("Successfully deleted checked item");
+                res.redirect("/");
+            }
+        });
+    } else {
+        List.findOneAndUpdate(
+            { name: listNameHidden }, 
+            { $pull: {items: { _id: checkedItemId }} },
+            function(err, results) {
+            
+                if (err){
+                    console.log(err);
+                } else {
+                    res.redirect("/" + listNameHidden);
+                }
+
+            }
+        );
+    }
+
+
+    
 
 });
 
 app.get("/:customListName", function(req, res){
-    const customListName = req.params.customListName;
+    const customListName = _.capitalize(req.params.customListName);
 
     List.findOne({ name: customListName }, function(err, results){
         if (err) {
