@@ -14,7 +14,7 @@ app.set("view engine", "ejs");
 // const todoItems = ["Study Programming", "Make an application"];
 // const workItems = [];
 
-const mongoAtlasURI = "mongodb+srv://admin-edward:Test123@cluster0.akcze.mongodb.net/todolistDB?retryWrites=true&w=majority";
+const mongoAtlasURI = process.env.DB_URI;
 
 mongoose.connect(mongoAtlasURI, {useNewUrlParser: true});
 
