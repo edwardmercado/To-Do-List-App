@@ -13,7 +13,10 @@ app.set("view engine", "ejs");
 
 // const todoItems = ["Study Programming", "Make an application"];
 // const workItems = [];
-mongoose.connect("mongodb://localhost:27017/todolistDB", {useNewUrlParser: true});
+
+const mongoAtlasURI = "mongodb+srv://admin-edward:Test123@cluster0.akcze.mongodb.net/todolistDB?retryWrites=true&w=majority";
+
+mongoose.connect(mongoAtlasURI, {useNewUrlParser: true});
 
 //the schema
 const itemSchema = {
