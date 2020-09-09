@@ -191,6 +191,11 @@ app.get("/about", function(req, res){
     res.render("about");
 })
 
-app.listen(5000, function () {
-  console.log("Server is running on port 5000");
+let port = process.env.PORT; //port that Heroku use
+if (port == null || port == "") {
+  port = 5000;
+}
+
+app.listen(port, function () {
+  console.log("Server has started successfully");
 });
